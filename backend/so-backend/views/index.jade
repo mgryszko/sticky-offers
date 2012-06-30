@@ -1,0 +1,20 @@
+!!! 5
+html
+  head
+    title 
+    script(src="/javascripts/jquery-1.7.2.min.js")
+    script(src="/javascripts/view.index.js")
+  body
+    #container
+      #header
+        h1 Nuevo descuento
+      form(action='/newdiscount', method='post')
+        label Codigo de descuento:
+        input(name='newdiscount', type='text', value='')
+        input(type="submit")      
+      label Descuentos:
+      ul#discounts
+        each discount in discounts
+          li()
+            a(href='#') #{discount}
+      span(id='discountname')
