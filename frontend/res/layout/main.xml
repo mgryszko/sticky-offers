@@ -22,4 +22,10 @@
         android:height="120dp"
         android:textSize="30sp"
         android:text="@string/scan"/>
+    <TextView
+        android:id="@+id/offerCode"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:textSize="30sp"/>
 </LinearLayout>

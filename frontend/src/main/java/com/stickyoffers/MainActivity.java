@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +27,8 @@ public class MainActivity extends RoboActivity implements ClaimOfferListener {
     private LinearLayout main;
     @InjectView(R.id.scan)
     private Button scan;
+    @InjectView(R.id.offerCode)
+    private TextView offerCode;
     @InjectResource(R.string.claiming)
     private String claiming;
     @InjectResource(R.string.claimOfferError)
@@ -92,12 +93,7 @@ public class MainActivity extends RoboActivity implements ClaimOfferListener {
     @Override
     public void offerAssigned(Offer offer) {
         removeDialog(LOAD_PROGRESS_DIALOG);
-        TextView result = new TextView(this);
-        result.setLayoutParams(
-            new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        );
-        result.setText("Offer code: " + offer.getCode());
-        main.addView(result, main.getChildCount());
+        offerCode.setText("Discount code\n" + offer.getCode());
     }
 
     @Override
