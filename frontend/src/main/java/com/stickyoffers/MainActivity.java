@@ -1,5 +1,7 @@
 package com.stickyoffers;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,24 +9,31 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.google.inject.Inject;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 
+import static android.app.ProgressDialog.STYLE_SPINNER;
 import static com.google.zxing.integration.android.IntentIntegrator.QR_CODE_TYPES;
 
 
-public class MainActivity extends RoboActivity {
+public class MainActivity extends RoboActivity implements ClaimOfferListener {
+    private static final int LOAD_PROGRESS_DIALOG = 0;
+
     @InjectView(R.id.main)
-    LinearLayout main;
-
+    private LinearLayout main;
     @InjectView(R.id.scan)
-    Button scan;
-
+    private Button scan;
+    @InjectResource(R.string.claiming)
+    private String claiming;
+    @InjectResource(R.string.claimOfferError)
+    private String claimOfferError;
     @Inject
-    OfferRepository offerRepository;
+    private ClaimOfferTask claimOfferTask;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,14 +56,58 @@ public class MainActivity extends RoboActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult != null) {
-            Offer offer = offerRepository.claim(scanResult.getContents());
-            TextView result = new TextView(this);
-            result.setLayoutParams(
-                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            );
-            result.setText("Offer code: " + offer.getCode());
-            main.addView(result, main.getChildCount());
+        String token = scanResult.getContents();
+        if (token != null) {
+            claimOffer(scanResult.getContents());
         }
+    }
+
+    private void claimOffer(String token) {
+        claimOfferTask.setClaimOfferListener(this);
+        claimOfferTask.setToken(token);
+        claimOfferTask.execute();
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        if (id == LOAD_PROGRESS_DIALOG) {
+            return createClaimingProgressDialog();
+        }
+
+        return super.onCreateDialog(id);
+    }
+
+    private Dialog createClaimingProgressDialog() {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(STYLE_SPINNER);
+        progressDialog.setMessage(claiming);
+        return progressDialog;
+    }
+
+    @Override
+    public void claimingOffer() {
+        showDialog(LOAD_PROGRESS_DIALOG);
+    }
+
+    @Override
+    public void offerAssigned(Offer offer) {
+        removeDialog(LOAD_PROGRESS_DIALOG);
+        TextView result = new TextView(this);
+        result.setLayoutParams(
+            new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        );
+        result.setText("Offer code: " + offer.getCode());
+        main.addView(result, main.getChildCount());
+    }
+
+    @Override
+    public void claimOfferError() {
+        removeDialog(LOAD_PROGRESS_DIALOG);
+        Toast.makeText(this, claimOfferError, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void claimOfferAborted() {
+        removeDialog(LOAD_PROGRESS_DIALOG);
     }
 }
