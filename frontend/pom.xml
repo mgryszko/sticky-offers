@@ -24,7 +24,8 @@
         <spring-android.version>1.0.0.RELEASE</spring-android.version>
         <gson.version>2.2.1</gson.version>
         <roboguice.version>2.0</roboguice.version>
-
+        <zxing.version>2.0</zxing.version>
+        <android-home>/opt/android-sdk</android-home>
     </properties>
 
     <build>
@@ -88,6 +89,27 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>android-integration</artifactId>
+            <version>${zxing.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.android</groupId>
+                    <artifactId>android</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.android</groupId>
+                    <artifactId>support</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>support-v4</artifactId>
+            <type>jar</type>
+            <version>r7</version>
         </dependency>
     </dependencies>
 

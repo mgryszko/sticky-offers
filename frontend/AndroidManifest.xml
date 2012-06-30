@@ -14,8 +14,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <intent-filter>
+            <action android:name="com.google.zxing.client.android.SCAN"/>
+            <category android:name="android.intent.category.DEFAULT"/>
+        </intent-filter>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 </manifest>
 
