@@ -1,14 +1,60 @@
-// Load the http module to create an http server.
-var http = require('http');
 
-// Configure our HTTP server to respond with Hello World to all requests.
-var server = http.createServer(function (request, response) {
-  response.writeHead(200, {"Content-Type": "text/plain"});
-  response.end("Hello World\n");
+/**
+ * Module dependencies.
+ */
+
+var express = require('express'), 
+    routes = require('./routes');
+
+var app = module.exports = express.createServer();
+var qrcodeservice = require('./qrcodeservice');
+
+// Configuration
+
+app.configure(function(){
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'jade');
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(app.router);
+  app.use(express.static(__dirname + '/public'));
 });
 
-// Listen on port 8000, IP defaults to 127.0.0.1
-server.listen(8000);
+app.configure('development', function(){
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
 
-// Put a friendly message on the terminal
-console.log("Server running at http://127.0.0.1:8000/");
+app.configure('production', function(){
+  app.use(express.errorHandler());
+});
+
+// Routes
+
+var discounts = [];
+
+var fs = require('fs');
+
+app.get('/', function(req, res){
+  res.render('index', {
+    title: 'Crear nuevo descuento',
+	discounts: discounts,
+  });
+});
+
+app.post('/newdiscount', function(req, res){
+  discounts.push(req.body.newdiscount);
+  res.render('index', {
+    title: 'Crear nuevo descuento',
+	  discounts: discounts
+  });
+});
+
+app.get('/showdiscount/:discountname', function(req, res){
+  qrcodeservice.getqrcodeimage(req.params.discountname, function(image) {
+    res.send({'image': '<img src="' + image + '"/>'});
+  });
+});
+
+app.listen(8080, function(){
+  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+});
