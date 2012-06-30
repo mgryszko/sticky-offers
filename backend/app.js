@@ -8,6 +8,7 @@ var express = require('express'),
 
 var app = module.exports = express.createServer();
 var qrcodeservice = require('./qrcodeservice');
+var cryptoservice = require('./cryptoservice');
 
 // Configuration
 
@@ -28,17 +29,18 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
-// Routes
-
 var discounts = [];
-
-var fs = require('fs');
 
 app.get('/', function(req, res){
   res.render('index', {
     title: 'Crear nuevo descuento',
 	discounts: discounts,
   });
+});
+
+app.post('/discountcode', function(req, res){
+  var dicountcode = cryptoservice.decipher(req.body.claim);
+  res.json({'discountcode': discountcode});
 });
 
 app.post('/newdiscount', function(req, res){
