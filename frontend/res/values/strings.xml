@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Sticky Offers</string>
+    <string name="teaser_header">Grab your discount!</string>
+    <string name="scan">Scan the QR code</string>
 </resources>
