@@ -27,8 +27,8 @@ public class MainActivity extends RoboActivity implements ClaimOfferListener {
     private LinearLayout main;
     @InjectView(R.id.scan)
     private Button scan;
-    @InjectView(R.id.offerCode)
-    private TextView offerCode;
+    @InjectView(R.id.discountCode)
+    private TextView discountCode;
     @InjectResource(R.string.claiming)
     private String claiming;
     @InjectResource(R.string.claimOfferError)
@@ -93,7 +93,7 @@ public class MainActivity extends RoboActivity implements ClaimOfferListener {
     @Override
     public void offerAssigned(Offer offer) {
         removeDialog(LOAD_PROGRESS_DIALOG);
-        offerCode.setText("Discount code\n" + offer.getCode());
+        discountCode.setText("Discount code\n" + offer.getDiscountCode());
     }
 
     @Override

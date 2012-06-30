@@ -1,12 +1,12 @@
 package com.stickyoffers;
 
 public class Offer {
-    private String code;
+    private String discountCode;
 
-    public String getCode() {
-        return code;
+    public String getDiscountCode() {
+        return discountCode;
     }
-    public void setCode(String code) {
-        this.code = code;
+    public void setDiscountCode(String discountCode) {
+        this.discountCode = discountCode;
     }
 }

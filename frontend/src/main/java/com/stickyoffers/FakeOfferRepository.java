@@ -7,7 +7,7 @@ public class FakeOfferRepository implements OfferRepository {
     @Override
     public Offer claim(String token) {
         Offer offer = new Offer();
-        offer.setCode("PROMO1");
+        offer.setDiscountCode("PROMO1");
         return offer;
     }
 }
