@@ -38,9 +38,9 @@ app.get('/', function(req, res){
   });
 });
 
-app.post('/discountcode', function(req, res){
-  var dicountcode = cryptoservice.decipher(req.body.claim);
-  res.json({'discountcode': discountcode});
+app.post('/claim', function(req, res){
+  var discountcode = cryptoservice.decipher(req.body.token);
+  res.json({'discountCode': discountcode});
 });
 
 app.post('/newdiscount', function(req, res){
@@ -52,7 +52,7 @@ app.post('/newdiscount', function(req, res){
 });
 
 app.get('/showdiscount/:discountname', function(req, res){
-  qrcodeservice.getqrcodeimage(req.params.discountname, function(image) {
+  qrcodeservice.getqrcodeimage(cryptoservice.cipher(req.params.discountname), function(image) {
     res.send({'image': '<img src="' + image + '"/>'});
   });
 });
