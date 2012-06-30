@@ -1,16 +1,9 @@
-
-/**
- * Module dependencies.
- */
-
 var express = require('express'), 
     routes = require('./routes');
 
 var app = module.exports = express.createServer();
 var qrcodeservice = require('./qrcodeservice');
 var cryptoservice = require('./cryptoservice');
-
-// Configuration
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -29,13 +22,18 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
+var title = 'Crear nuevo descuento';
 var discounts = [];
 
-app.get('/', function(req, res){
+var renderIndex = function(res){
   res.render('index', {
-    title: 'Crear nuevo descuento',
-	discounts: discounts,
+    title: title,
+    discounts: discounts,
   });
+}
+
+app.get('/', function(req, res){
+  renderIndex(res);
 });
 
 app.post('/claim', function(req, res){
@@ -45,15 +43,12 @@ app.post('/claim', function(req, res){
 
 app.post('/newdiscount', function(req, res){
   discounts.push(req.body.newdiscount);
-  res.render('index', {
-    title: 'Crear nuevo descuento',
-	  discounts: discounts
-  });
+  renderIndex(res);
 });
 
 app.get('/showdiscount/:discountname', function(req, res){
-  qrcodeservice.getqrcodeimage(cryptoservice.cipher(req.params.discountname), function(image) {
-    res.send({'image': '<img src="' + image + '"/>'});
+  qrcodeservice.getqrcodeimage(cryptoservice.cipher(req.params.discountname), function(image){
+    res.send(image);
   });
 });
 
