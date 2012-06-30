@@ -1,7 +1,7 @@
 var qrcode = require('qrcode');
 
-function encode(value) {
+exports.getqrcodeimage = function(value, callback) {
   qrcode.toDataURL(value, function(err, qr) {
-      return qr;
+    callback(qr);
   });
 }

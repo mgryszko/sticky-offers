@@ -1,9 +1,8 @@
 $(document).ready(function() {
-	$('li a').click(function() {
-	  var name = $(this).text();
-	  $.getJSON('/showdiscount/' + name, function(data) {
-		$('#discountname').html(data.discountname);
-		console.log(data.image);
-	  });
-	});
+  $('li a').click(function() {
+    var name = $(this).text();
+    $.get('/showdiscount/' + name, function(data) {
+      $('#image').append(data.image);
+    }); 
+  });
 });

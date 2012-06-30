@@ -3,10 +3,11 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes');
+var express = require('express'), 
+    routes = require('./routes');
 
 var app = module.exports = express.createServer();
+var qrcodeservice = require('./qrcodeservice');
 
 // Configuration
 
@@ -44,7 +45,13 @@ app.post('/newdiscount', function(req, res){
   discounts.push(req.body.newdiscount);
   res.render('index', {
     title: 'Crear nuevo descuento',
-	discounts: discounts,
+	  discounts: discounts
+  });
+});
+
+app.get('/showdiscount/:discountname', function(req, res){
+  qrcodeservice.getqrcodeimage(req.params.discountname, function(image) {
+    res.send({'image': '<img src="' + image + '"/>'});
   });
 });
 
